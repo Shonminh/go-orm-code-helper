@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>org.shonminh.helper.GenerateModelAction</id>
+    <name>Sample for working with IntelliJ Action System</name>
+    <version>1.1</version>
+    <vendor>JetBrains</vendor>
+
+    <description>Illustration of the Action System with various registration variants</description>
+
+    <change-notes>Refactor to give users feedback when menu items are selected.</change-notes>
+
+    <idea-version since-build="131"/>
+    <depends>com.intellij.modules.lang</depends>
+
+    <actions>
+
+        <action id="generateModelActionId" class="org.shonminh.helper.GenerateModelAction" text="Generate Model"
+                description="Generate Golang Model">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
