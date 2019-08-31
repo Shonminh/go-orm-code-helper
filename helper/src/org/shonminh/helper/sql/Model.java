@@ -50,21 +50,46 @@ public class Model {
         if (this.columns == null || this.columns.size() == 0) {
             return "";
         }
+        // 计算格式化打印需要的字符串
+        calculateFormalizeString();
+
         StringBuilder sb = new StringBuilder();
         sb.append("type ");
-        sb.append(StringUtil.camelString(this.modelName, true));
+        sb.append(StringUtil.camelString(this.modelName));
         sb.append(" struct{\n");
         for (int i = 0; i < this.columns.size(); i++) {
             Column column = this.columns.get(i);
-
+            sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
+            sb.append("\n");
         }
-
+        sb.append("}");
 
 
         return sb.toString();
     }
 
+    public void calculateFormalizeString() {
+        final int[] maxSize = {0};
+        this.columns.forEach(column -> {
+            String camelStr = StringUtil.camelString(column.getName());
+            int size = camelStr.length() + 1;
+            if (size > maxSize[0]) {
+                maxSize[0] = size;
+            }
+        });
+        this.columns.forEach(column -> {
+            String camelStr = StringUtil.camelString(column.getName());
+            int size = maxSize[0] - camelStr.length();
+            for (int i = 0; i < size; i++) {
+                if (i == 0) {
+                    column.setFormatStr(" ");
+                } else {
+                    column.setFormatStr(column.getFormatStr() + " ");
+                }
 
+            }
+        });
+    }
 
 
     @Override

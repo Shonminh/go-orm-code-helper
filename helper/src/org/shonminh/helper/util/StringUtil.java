@@ -6,7 +6,7 @@ public class StringUtil {
         return (string.trim().startsWith("--"));
     }
 
-    public static String camelString(String string, boolean firstCharacterUpper) {
+    public static String camelString(String string) {
         char[] array = string.toCharArray();
         char[] retArray = new char[array.length];
         if (array.length < 2) {

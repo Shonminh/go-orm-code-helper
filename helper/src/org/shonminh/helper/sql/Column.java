@@ -1,5 +1,6 @@
 package org.shonminh.helper.sql;
 
+import org.shonminh.helper.util.GoTypeUtil;
 import org.shonminh.helper.util.StringUtil;
 
 public class Column {
@@ -10,6 +11,7 @@ public class Column {
     private boolean isUnsigned;
     private boolean isNotNull;
     private String raw;
+    private String formatStr;
 
     public String getRaw() {
         return raw;
@@ -59,34 +61,29 @@ public class Column {
         isNotNull = notNull;
     }
 
+    public String getFormatStr() {
+        return formatStr;
+    }
 
-//    type CompareStockDetailTab struct {
-//	ID           uint64 `gorm:"type:BIGINT(21) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL;"`
-//	VersionDate  string `gorm:"type:VARCHAR(64);NOT NULL"`
-//	NodeID       string `gorm:"type:VARCHAR(64);NOT NULL"`
-//	Operator     string `gorm:"type:VARCHAR(64);NOT NULL"`
-//	SheetType    uint16 `gorm:"type:SMALLINT(5) UNSIGNED;NOT NULL"`
-//	SheetID      string `gorm:"type:VARCHAR(64);NOT NULL"`
-//	IscChangeQty uint32 `gorm:"type:INT(11) UNSIGNED;NOT NULL"`
-//	WmsChangeQty uint32 `gorm:"type:INT(11) UNSIGNED;NOT NULL"`
-//	ChangeQty    uint32 `gorm:"type:INT(11) UNSIGNED;NOT NULL"`
-//
-//	// 是否有差异
-//	IsDifferent int8 `gorm:"type:TINYINT(4);NOT NULL"`
-//	// 状态
-//	Status int8 `gorm:"type:TINYINT(4);NOT NULL"`
-//	CreateTime uint32 `gorm:"type:INT(11) UNSIGNED;NOT NULL"`
-//	UpdateTime uint32 `gorm:"type:INT(11) UNSIGNED;NOT NULL"`
-//}
+    public void setFormatStr(String formatStr) {
+        this.formatStr = formatStr;
+    }
 
     public String generateColumnStruc(boolean isPrimaryKey) {
         StringBuilder sb = new StringBuilder();
         sb.append("\t\t");
-        sb.append(StringUtil.camelString(this.name, true));
-        sb.append("\t\t");
-        //TODO implement me
-
-
+        sb.append(StringUtil.camelString(this.name));
+        sb.append(this.formatStr);
+        sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
+        sb.append("`gorm:\"type:").append(this.type.toUpperCase());
+        if (this.isUnsigned) {
+            sb.append(" UNSIGNED");
+        }
+        sb.append(";");
+        if (this.isNotNull) {
+            sb.append("NOT NULL");
+        }
+        sb.append("\"`");
         return sb.toString();
     }
 
@@ -99,6 +96,7 @@ public class Column {
                 ", isUnsigned=" + isUnsigned +
                 ", isNotNull=" + isNotNull +
                 ", raw='" + raw + '\'' +
+                ", formatStr='" + formatStr + '\'' +
                 '}';
     }
 }
