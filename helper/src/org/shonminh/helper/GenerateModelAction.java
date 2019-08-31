@@ -35,6 +35,7 @@ public class GenerateModelAction extends AnAction {
         String result = sqlParser.Execute(sqlStr);
         if ("".equals(result)) {
             Messages.showInfoMessage("create table not found", "Generate Model Result");
+            return;
         }
         try {
             FileUtil.WriteFile(canonicalPath, result);
