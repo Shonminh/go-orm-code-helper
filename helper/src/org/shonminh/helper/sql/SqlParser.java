@@ -12,7 +12,10 @@ import java.util.regex.Pattern;
 
 public class SqlParser {
 
-    private List<String> getStatements(String str) {
+
+    private List<String> statements;
+
+    private void generateStatements(String str) {
         String[] splits = str.split("[\n\r]+");
         List<String> list = new ArrayList<>();
         boolean lastHasEndWithSeparator = true;
@@ -31,7 +34,7 @@ public class SqlParser {
             }
             lastHasEndWithSeparator = split.endsWith(";");
         }
-        return list;
+        this.setStatements(list);
     }
 
     private boolean checkIfCreateStatement(String string) {
@@ -42,7 +45,9 @@ public class SqlParser {
     }
 
 
-    private void parseStatements(List<String> statements) {
+    private String parseStatements() {
+
+        StringBuilder resultStringBuilder = new StringBuilder();
         for (String statement : statements) {
             // 如果不是创建语句，则跳过
             if (!checkIfCreateStatement(statement)) {
@@ -101,9 +106,9 @@ public class SqlParser {
                 }
                 model.appendColumn(column);
             }
-            System.out.println(model.generateGoStruct());
+            resultStringBuilder.append(model.generateGoStruct());
         }
-
+        return resultStringBuilder.toString();
     }
 
 
@@ -145,30 +150,18 @@ public class SqlParser {
         return false;
     }
 
-    public static void main(String[] args) throws Exception {
-        FileReader reader = new FileReader("/Users/shonminh/ShopeeProject/stock_server/deploy/sql/20190327_add_compare_stock_detail_tab.sql");
-        BufferedReader br = new BufferedReader(reader);
-        StringBuilder sb = new StringBuilder();
-        while (true) {
-            String line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            sb.append(line);
-            sb.append("\n");
-
-        }
-        String sql = sb.toString();
-        SqlParser sqlParser = new SqlParser();
-        List<String> statements = sqlParser.getStatements(sql);
-//        System.out.println(sqlParser.checkIfCreateLikeStatement(statements.get(0)));
-//        System.out.println(sqlParser.checkIfCreateLikeStatement(statements.get(1)));
-//        System.out.println(sqlParser.checkIfCreateLikeStatement(statements.get(2)));
-//        System.out.println(sqlParser.checkIfCreateStatement(statements.get(0)));
-//        System.out.println(sqlParser.checkIfCreateStatement(statements.get(1)));
-//        System.out.println(sqlParser.checkIfCreateStatement(statements.get(2)));
-        sqlParser.parseStatements(statements);
-
+    public List<String> getStatements() {
+        return statements;
     }
+
+    public void setStatements(List<String> statements) {
+        this.statements = statements;
+    }
+
+    public String Execute(String sql) {
+        this.generateStatements(sql);
+        return parseStatements();
+    }
+
 }
 
