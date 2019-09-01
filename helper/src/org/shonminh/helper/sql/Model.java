@@ -50,7 +50,7 @@ public class Model {
         if (this.columns == null || this.columns.size() == 0) {
             return "";
         }
-        // 计算格式化打印需要的字符串
+        // calculate formalize blank string
         calculateFormalizeString();
 
         StringBuilder sb = new StringBuilder();

@@ -19,7 +19,7 @@ public class SqlParser {
         boolean lastHasEndWithSeparator = true;
         for (String split : splits) {
             String string = split.trim();
-            // 如果是空或者是注释则过滤
+            // if is empty or comment, pass
             if ("".equals(string) || StringUtil.isSqlComment(string)) {
                 continue;
             }
@@ -48,7 +48,7 @@ public class SqlParser {
         StringBuilder resultStringBuilder = new StringBuilder();
         boolean isFirst = true;
         for (String statement : statements) {
-            // 如果不是创建语句，则跳过
+            // if not create statement then pass
             if (!checkIfCreateStatement(statement)) {
                 continue;
             }
@@ -72,7 +72,7 @@ public class SqlParser {
             for (String str : split) {
                 str = str.trim();
 
-                // 如果是一般的索引直接过滤
+                // if is key then pass
                 if (str.startsWith("key") || str.startsWith("unique")) {
                     continue;
                 }
@@ -80,7 +80,7 @@ public class SqlParser {
                 if (s1.length <= 1) {
                     continue;
                 }
-                if (isPrimaryKey(s1)) { // 设置primary key
+                if (isPrimaryKey(s1)) { // set primary key
                     String primaryKey = s1[s1.length - 1].replace("(", "").replace(")", "");
                     model.setPrimaryKey(primaryKey);
                     continue;
@@ -106,7 +106,7 @@ public class SqlParser {
                 model.appendColumn(column);
             }
 
-            // 如果是开头的话，加入go的包名为model
+            // if is first append string then add golang package name
             if (isFirst) {
                 resultStringBuilder.append("package model\n\n");
                 isFirst = false;
