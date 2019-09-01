@@ -3,8 +3,6 @@ package org.shonminh.helper.sql;
 
 import org.shonminh.helper.util.StringUtil;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -48,6 +46,7 @@ public class SqlParser {
     private String parseStatements() {
 
         StringBuilder resultStringBuilder = new StringBuilder();
+        boolean isFirst = true;
         for (String statement : statements) {
             // 如果不是创建语句，则跳过
             if (!checkIfCreateStatement(statement)) {
@@ -105,6 +104,12 @@ public class SqlParser {
                     column.setUnsigned(false);
                 }
                 model.appendColumn(column);
+            }
+
+            // 如果是开头的话，加入go的包名为model
+            if (isFirst) {
+                resultStringBuilder.append("package model\n\n");
+                isFirst = false;
             }
             resultStringBuilder.append(model.generateGoStruct());
         }
