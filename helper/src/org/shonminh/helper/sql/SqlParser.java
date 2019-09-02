@@ -103,6 +103,12 @@ public class SqlParser {
                 } else {
                     column.setUnsigned(false);
                 }
+                if (isAutoIncrement(s1)) {
+                    column.setAutoIncrement(true);
+                } else {
+                    column.setAutoIncrement(false);
+                }
+
                 model.appendColumn(column);
             }
 
@@ -149,6 +155,15 @@ public class SqlParser {
     private boolean isUnsigned(String[] split) {
         for (String s : split) {
             if ("unsigned".equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAutoIncrement(String[] split) {
+        for (String s : split) {
+            if ("auto_increment".equals(s)) {
                 return true;
             }
         }

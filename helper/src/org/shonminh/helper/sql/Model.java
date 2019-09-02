@@ -57,8 +57,7 @@ public class Model {
         sb.append("type ");
         sb.append(StringUtil.camelString(this.modelName));
         sb.append(" struct{\n");
-        for (int i = 0; i < this.columns.size(); i++) {
-            Column column = this.columns.get(i);
+        for (Column column : this.columns) {
             sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
             sb.append("\n");
         }

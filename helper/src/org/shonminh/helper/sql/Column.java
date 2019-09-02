@@ -12,6 +12,7 @@ public class Column {
     private boolean isNotNull;
     private String raw;
     private String formatStr;
+    private boolean isAutoIncrement;
 
     public String getRaw() {
         return raw;
@@ -61,6 +62,16 @@ public class Column {
         isNotNull = notNull;
     }
 
+
+    public boolean isAutoIncrement() {
+        return isAutoIncrement;
+    }
+
+    public void setAutoIncrement(boolean autoIncrement) {
+        isAutoIncrement = autoIncrement;
+    }
+
+
     public String getFormatStr() {
         return formatStr;
     }
@@ -75,12 +86,18 @@ public class Column {
         sb.append(StringUtil.camelString(this.name));
         sb.append(this.formatStr);
         sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
-        sb.append("`gorm:\"type:").append(this.type.toUpperCase());
+        sb.append(" `gorm:\"type:").append(this.type.toUpperCase());
         if (this.isUnsigned) {
             sb.append(" UNSIGNED");
         }
         sb.append(";");
-        if (this.isNotNull) {
+        if (isPrimaryKey) {
+            sb.append("PRIMARY_KEY;");
+        }
+        if (this.isAutoIncrement()) {
+            sb.append("AUTO_INCREMENT;");
+        }
+        if (this.isNotNull()) {
             sb.append("NOT NULL");
         }
         sb.append("\"`");
@@ -97,6 +114,7 @@ public class Column {
                 ", isNotNull=" + isNotNull +
                 ", raw='" + raw + '\'' +
                 ", formatStr='" + formatStr + '\'' +
+                ", isAutoIncrement=" + isAutoIncrement +
                 '}';
     }
 }
