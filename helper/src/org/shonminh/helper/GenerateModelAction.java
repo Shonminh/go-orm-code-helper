@@ -14,6 +14,7 @@ import org.shonminh.helper.util.FileUtil;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class GenerateModelAction extends AnAction {
 
@@ -28,11 +29,10 @@ public class GenerateModelAction extends AnAction {
         } else {
             sqlStr = document.getText();
         }
-        Path filePath = Paths.get(FileDocumentManager.getInstance().getFile(editor.getDocument()).getCanonicalPath());
-        String newFileName = filePath.getFileName().toString().split("\\.")[0] + ".go";
-        String canonicalPath = filePath.getParent().toString() + "/" + newFileName;
+        Path filePath = Paths.get(Objects.requireNonNull(Objects.requireNonNull(FileDocumentManager.getInstance().getFile(editor.getDocument())).getCanonicalPath()));
         SqlParser sqlParser = new SqlParser();
         String result = sqlParser.Execute(sqlStr);
+        String canonicalPath = filePath.getParent().toString() + "/" + sqlParser.getFileName();
         if ("".equals(result) || null == result) {
             Messages.showInfoMessage("create table not found", "Generate Model Result");
             return;

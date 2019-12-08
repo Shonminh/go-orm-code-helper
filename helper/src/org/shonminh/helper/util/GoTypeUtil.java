@@ -8,7 +8,7 @@ public class GoTypeUtil {
 
     public static String Translate2GoType(String string, boolean isUnsigned) {
 
-        Pattern compile = Pattern.compile("([a-zA-Z]+)(\\((.+)\\)|(.*))");
+        Pattern compile = Pattern.compile("([a-zA-Z]+)(\\s*)(\\((.+)\\)|(.*))");
         Matcher matcher = compile.matcher(string);
         String type = null;
         if (matcher.matches()) {

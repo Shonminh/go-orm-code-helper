@@ -19,7 +19,7 @@
     <actions>
 
         <action id="generateModelActionId" class="org.shonminh.helper.GenerateModelAction" text="Generate Model"
-                description="Generate Golang Model">
+                description="Generate golang model">
             <keyboard-shortcut first-keystroke="control G" keymap="$default"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>

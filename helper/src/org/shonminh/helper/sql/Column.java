@@ -10,17 +10,9 @@ public class Column {
     private String defaultValue;
     private boolean isUnsigned;
     private boolean isNotNull;
-    private String raw;
     private String formatStr;
+    private String typeFormatStr;
     private boolean isAutoIncrement;
-
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
 
     public String getName() {
         return name;
@@ -86,7 +78,8 @@ public class Column {
         sb.append(StringUtil.camelString(this.name));
         sb.append(this.formatStr);
         sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
-        sb.append(" `gorm:\"type:").append(this.type.toUpperCase());
+        sb.append(this.typeFormatStr);
+        sb.append("`gorm:\"type:").append(this.type.toUpperCase());
         if (this.isUnsigned) {
             sb.append(" UNSIGNED");
         }
@@ -104,6 +97,14 @@ public class Column {
         return sb.toString();
     }
 
+    public String getTypeFormatStr() {
+        return typeFormatStr;
+    }
+
+    public void setTypeFormatStr(String typeFormatStr) {
+        this.typeFormatStr = typeFormatStr;
+    }
+
     @Override
     public String toString() {
         return "Column{" +
@@ -112,8 +113,8 @@ public class Column {
                 ", defaultValue='" + defaultValue + '\'' +
                 ", isUnsigned=" + isUnsigned +
                 ", isNotNull=" + isNotNull +
-                ", raw='" + raw + '\'' +
                 ", formatStr='" + formatStr + '\'' +
+                ", typeFormatStr='" + typeFormatStr + '\'' +
                 ", isAutoIncrement=" + isAutoIncrement +
                 '}';
     }
