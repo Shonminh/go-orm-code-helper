@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>org.shonminh.helper.GenerateModelAction</id>
+    <name>Go Orm Code Helper</name>
+    <version>1.0.0</version>
+    <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
+
+    <description>ORM code helper for go language, it can generate model struct by create sql statement.</description>
+
+    <change-notes>
+        <![CDATA[
+      Initial release.<br>
+      <em>v1.0.0</em>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="131"/>
+    <depends>com.intellij.modules.lang</depends>
+
+    <actions>
+
+        <action id="generateModelActionId" class="org.shonminh.helper.GenerateModelAction" text="Generate Model"
+                description="Generate golang model">
+            <keyboard-shortcut first-keystroke="control G" keymap="$default"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
