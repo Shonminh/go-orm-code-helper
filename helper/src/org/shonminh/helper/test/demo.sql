@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS demo_db;
 
-CREATE TABLE IF NOT EXISTS demo.test_tab (
+CREATE TABLE IF NOT EXISTS demo.test_demo_tab (
   id bigint(21) unsigned NOT NULL AUTO_INCREMENT,
   user_id int(11) unsigned DEFAULT 0 NOT NULL,
   parent_user_id varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,

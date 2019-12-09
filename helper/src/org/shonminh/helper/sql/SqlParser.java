@@ -73,7 +73,7 @@ public class SqlParser {
                 Model model = new Model(modelName);
                 model.setPrimaryKeyName(singleCCJStatement);
                 model.appendColumnsByCCJCreateTable(singleCCJStatement);
-                this.setFileName(model.getModelName() + ".go");
+                this.setFileName(model.getModelName().replaceFirst("_tab$", "") + ".go");
 
                 // if is first append string then add golang package name
                 if (isFirst) {
