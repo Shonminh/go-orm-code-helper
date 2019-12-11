@@ -4,12 +4,14 @@
     <version>1.0.0</version>
     <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
 
-    <description>ORM code helper for go language, it can generate model struct by create sql statement.</description>
-
+    <description>ORM code helper for go language, it can generate model struct by creating sql statement.</description>
     <change-notes>
         <![CDATA[
-      Initial release.<br>
-      <em>v1.0.0</em>
+        <ul>
+          <li><b>1.1.1</b> Modify plugin xml.</li>
+          <li><b>1.1.0</b> Fix type format bug.</li>
+          <li><b>1.0.0</b> Initial release.</li>
+        </ul>
     ]]>
     </change-notes>
 
