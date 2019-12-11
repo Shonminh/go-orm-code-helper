@@ -74,7 +74,7 @@ public class Column {
 
     public String generateColumnStruc(boolean isPrimaryKey) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t\t");
+        sb.append("\t");
         sb.append(StringUtil.camelString(this.name));
         sb.append(this.formatStr);
         sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));

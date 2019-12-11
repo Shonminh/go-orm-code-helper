@@ -61,7 +61,7 @@ public class Model {
         StringBuilder sb = new StringBuilder();
         sb.append("type ");
         sb.append(StringUtil.camelString(this.modelName));
-        sb.append(" struct{\n");
+        sb.append(" struct {\n");
 
         for (Column column : this.columns) {
             sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
@@ -121,7 +121,7 @@ public class Model {
                 columnDefinitions) {
             Column column = new Column();
             column.setName(co.getColumnName());
-            column.setType(co.getColDataType().toString());
+            column.setType(co.getColDataType().toString().replace(" ", ""));
             List<String> columnSpecStrings = co.getColumnSpecStrings();
             if (columnSpecStrings.size() > 0) {
                 for (int i = 0; i < columnSpecStrings.size(); i++) {

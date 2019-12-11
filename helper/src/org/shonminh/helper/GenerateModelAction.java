@@ -33,8 +33,12 @@ public class GenerateModelAction extends AnAction {
         SqlParser sqlParser = new SqlParser();
         String result = sqlParser.Execute(sqlStr);
         String canonicalPath = filePath.getParent().toString() + "/" + sqlParser.getFileName();
+        if (sqlParser.getErrMsg() != null) {
+            Messages.showErrorDialog("create table not found, please check sql syntax", "Generate Model Result");
+            return;
+        }
         if ("".equals(result) || null == result) {
-            Messages.showInfoMessage("create table not found", "Generate Model Result");
+            Messages.showErrorDialog("create table not found, please check sql syntax", "Generate Model Result");
             return;
         }
         try {

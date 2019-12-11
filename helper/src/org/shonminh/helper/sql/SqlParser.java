@@ -18,6 +18,7 @@ public class SqlParser {
 
     private List<String> statements;
     private String fileName;
+    private String errMsg;
 
     private void generateStatements(String str) {
         String[] splits = str.split("[\n\r]+");
@@ -81,7 +82,8 @@ public class SqlParser {
                     isFirst = false;
                 }
                 resultStringBuilder.append(model.generateGoStruct());
-            } catch (JSQLParserException ignored) {
+            } catch (JSQLParserException e) {
+                this.setErrMsg(e.getCause().getMessage());
             }
         }
         return resultStringBuilder.toString();
@@ -128,6 +130,14 @@ public class SqlParser {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 }
 
