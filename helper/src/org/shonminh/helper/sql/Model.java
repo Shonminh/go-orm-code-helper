@@ -120,7 +120,7 @@ public class Model {
         for (ColumnDefinition co :
                 columnDefinitions) {
             Column column = new Column();
-            column.setName(co.getColumnName());
+            column.setName(StringUtil.filterBackQuote(co.getColumnName()));
             column.setType(co.getColDataType().toString().replace(" ", ""));
             List<String> columnSpecStrings = co.getColumnSpecStrings();
             if (columnSpecStrings.size() > 0) {
