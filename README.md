@@ -4,6 +4,12 @@
 
 ORM code helper for go language, it can generate model struct by creating sql statement.
 
+## Download
+
+1. [go orm code helper plugin](https://plugins.jetbrains.com/plugin/13476-go-orm-code-helper/)
+2. download from plugin marketplace.
+
+
 ## Usage
 
 
