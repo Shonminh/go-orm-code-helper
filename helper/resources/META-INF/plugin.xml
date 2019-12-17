@@ -1,13 +1,14 @@
 <idea-plugin>
     <id>org.shonminh.helper.GenerateModelAction</id>
     <name>Go Orm Code Helper</name>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
     <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
 
     <description>ORM code helper for go language, it can generate model struct by creating sql statement.</description>
     <change-notes>
         <![CDATA[
         <ul>
+          <li><b>1.2.0</b> Support back quote.</li>
           <li><b>1.1.2</b> Modify plugin xml.</li>
           <li><b>1.1.0</b> Fix type format bug.</li>
           <li><b>1.0.0</b> Initial release.</li>
