@@ -67,7 +67,7 @@ public class Model {
             sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
             sb.append("\n");
         }
-        sb.append("}\n\n");
+        sb.append("}\n");
         return sb.toString();
     }
 
