@@ -1,79 +1,58 @@
 package org.shonminh.helper.sql;
 
 
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.Statements;
-import net.sf.jsqlparser.statement.create.table.CreateTable;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
+import com.alibaba.druid.util.JdbcConstants;
 import org.shonminh.helper.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SqlParser {
 
 
-    private List<String> statements;
+    private List<MySqlCreateTableStatement> statements;
     private String fileName;
     private String errMsg;
 
+    final String beforeComment = "format.before_comment";
+
     private void generateStatements(String str) {
-        String[] splits = str.split("[\n\r]+");
-        List<String> list = new ArrayList<>();
-        boolean lastHasEndWithSeparator = true;
-        for (String split : splits) {
-            String string = split.trim();
-            // if is empty or comment, pass
-            if ("".equals(string) || StringUtil.isSqlComment(string)) {
+
+        List<SQLStatement> statements = SQLUtils.parseStatements(str, JdbcConstants.MYSQL);
+        List<MySqlCreateTableStatement> createTableList = new ArrayList<>();
+        for (SQLStatement statement : statements) {
+            if (!(statement instanceof MySqlCreateTableStatement)) {
                 continue;
             }
-            if (lastHasEndWithSeparator) {
-                list.add(string);
-            } else {
-                String last = list.get(list.size() - 1);
-                last = last + " " + string;
-                list.set(list.size() - 1, last);
+            MySqlCreateTableStatement createTable = (MySqlCreateTableStatement) statement;
+            // if comment then ignore
+            if (createTable.getAttribute(beforeComment) != null) {
+                continue;
             }
-            lastHasEndWithSeparator = split.endsWith(";");
-        }
-        this.setStatements(list);
-    }
 
-    private boolean checkIfCreateStatement(String string) {
-        string = string.toLowerCase();
-        Pattern pattern = Pattern.compile("create table (.*)\\((.*)\\)(.*)");
-        Matcher matcher = pattern.matcher(string);
-        return matcher.matches();
+            // if is `create like` statement then ignore
+            if (createTable.getLike() != null) {
+                continue;
+            }
+            createTableList.add(createTable);
+        }
+        this.setStatements(createTableList);
     }
 
 
     private String parseStatements() {
-
         StringBuilder resultStringBuilder = new StringBuilder();
         boolean isFirst = true;
-        for (String statement : statements) {
-            // if not create statement then pass
-            if (!checkIfCreateStatement(statement)) {
-                continue;
-            }
-            Statements ccjStatements;
+        for (MySqlCreateTableStatement createTable : statements) {
             try {
-                ccjStatements = CCJSqlParserUtil.parseStatements(statement);
-
-                List<Statement> statementList = ccjStatements.getStatements();
-                if (statementList.size() < 1) {
-                    continue;
-                }
-
-                // get first one, assume that we only have parse one statement
-                Statement singleCCJStatement = statementList.get(0);
-                String modelName = getModelName(singleCCJStatement);
+                String modelName = getModelName(createTable);
                 Model model = new Model(modelName);
-                model.setPrimaryKeyName(singleCCJStatement);
-                model.appendColumnsByCCJCreateTable(singleCCJStatement);
+                // set all column properties
+                model.setAllColumnProperties(createTable);
                 this.setFileName(model.getModelName().replaceFirst("_tab$", "") + ".go");
 
                 // if is first append string then add golang package name
@@ -82,19 +61,19 @@ public class SqlParser {
                     isFirst = false;
                 }
                 resultStringBuilder.append(model.generateGoStruct());
-            } catch (JSQLParserException e) {
+            } catch (Exception e) {
                 this.setErrMsg(e.getCause().getMessage());
             }
         }
         return resultStringBuilder.toString();
     }
 
-    private String getModelName(Statement statement) {
-        CreateTable createTable = (CreateTable) statement;
-        return StringUtil.filterBackQuote(createTable.getTable().getName());
+
+    private String getModelName(MySqlCreateTableStatement createTable) {
+        return StringUtil.filterBackQuote(((SQLPropertyExpr) createTable.getTableSource().getExpr()).getSimpleName());
     }
 
-    public void setStatements(List<String> statements) {
+    public void setStatements(List<MySqlCreateTableStatement> statements) {
         this.statements = statements;
     }
 

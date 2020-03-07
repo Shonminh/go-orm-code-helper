@@ -80,9 +80,6 @@ public class Column {
         sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
         sb.append(this.typeFormatStr);
         sb.append("`gorm:\"type:").append(this.type.toUpperCase());
-        if (this.isUnsigned) {
-            sb.append(" UNSIGNED");
-        }
         sb.append(";");
         if (isPrimaryKey) {
             sb.append("PRIMARY_KEY;");

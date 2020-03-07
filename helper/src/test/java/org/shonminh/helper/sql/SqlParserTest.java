@@ -17,10 +17,10 @@ public class SqlParserTest {
                 "  no_id bigint(21) DEFAULT 0 NOT NULL,\n" +
                 "  `tiny_name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,\n" +
                 "\n" +
-                "  `score` decimal(10, 3)  DEFAULT '0.00' NOT NULL,\n" +
+                "  `score` decimal(10,3)  DEFAULT '0.00' NOT NULL,\n" +
                 "  create_time int(11) unsigned DEFAULT 0 NOT NULL,\n" +
                 "  update_time int(11) unsigned DEFAULT 0 NOT NULL,\n" +
-                "  UNIQUE KEY (user_id, pareent_user_id),\n" +
+                "  UNIQUE (user_id, pareent_user_id),\n" +
                 "  PRIMARY KEY (id)\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
         SqlParser sqlParser = new SqlParser();
@@ -32,10 +32,11 @@ public class SqlParserTest {
                 "\tParentUserId string  `gorm:\"type:VARCHAR(64);NOT NULL\"`\n" +
                 "\tNoId         int64   `gorm:\"type:BIGINT(21);NOT NULL\"`\n" +
                 "\tTinyName     string  `gorm:\"type:VARCHAR(64);NOT NULL\"`\n" +
-                "\tScore        float64 `gorm:\"type:DECIMAL(10,3);NOT NULL\"`\n" +
+                "\tScore        float64 `gorm:\"type:DECIMAL(10, 3);NOT NULL\"`\n" +
                 "\tCreateTime   uint32  `gorm:\"type:INT(11) UNSIGNED;NOT NULL\"`\n" +
                 "\tUpdateTime   uint32  `gorm:\"type:INT(11) UNSIGNED;NOT NULL\"`\n" +
                 "}\n";
-        assertEquals(expect, sqlParser.Execute(sql));
+        String actual = sqlParser.Execute(sql);
+        assertEquals(expect, actual);
     }
 }
