@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.shonminh.helper.GenerateModelAction</id>
     <name>Go Orm Code Helper</name>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
 
     <description>ORM code helper for go language, it can generate model struct by creating sql statement.</description>
@@ -16,7 +16,6 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="131"/>
     <depends>com.intellij.modules.lang</depends>
 
     <actions>

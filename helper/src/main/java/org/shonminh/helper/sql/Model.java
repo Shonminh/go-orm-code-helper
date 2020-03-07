@@ -1,9 +1,12 @@
 package org.shonminh.helper.sql;
 
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
-import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.table.Index;
+import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
+import com.alibaba.druid.sql.ast.statement.SQLColumnConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
+import com.alibaba.druid.sql.ast.statement.SQLNotNullConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLTableElement;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import org.shonminh.helper.util.GoTypeUtil;
 import org.shonminh.helper.util.StringUtil;
 
@@ -114,54 +117,64 @@ public class Model {
         });
     }
 
-    public void appendColumnsByCCJCreateTable(Statement statement) {
-        CreateTable createTable = (CreateTable) statement;
-        List<ColumnDefinition> columnDefinitions = createTable.getColumnDefinitions();
-        for (ColumnDefinition co :
-                columnDefinitions) {
+
+    public void setAllColumnProperties(MySqlCreateTableStatement createTable) {
+        List<SQLTableElement> tableElementList = createTable.getTableElementList();
+        if (tableElementList == null || tableElementList.size() == 0) {
+            return;
+        }
+        for (SQLTableElement element : tableElementList) {
+            // set primary key
+            if (element instanceof MySqlPrimaryKey) {
+                String primaryKeyName = ((MySqlPrimaryKey) element).getColumns().get(0).getExpr().toString();
+                this.setPrimaryKey(primaryKeyName);
+                continue;
+            }
+
+            // if not a column definition
+            if (!(element instanceof SQLColumnDefinition)) {
+                continue;
+            }
+            SQLColumnDefinition columnDefinition = (SQLColumnDefinition) element;
             Column column = new Column();
-            column.setName(StringUtil.filterBackQuote(co.getColumnName()));
-            column.setType(co.getColDataType().toString().replace(" ", ""));
-            List<String> columnSpecStrings = co.getColumnSpecStrings();
-            if (columnSpecStrings.size() > 0) {
-                for (int i = 0; i < columnSpecStrings.size(); i++) {
-                    String spec = columnSpecStrings.get(i);
-                    if ("UNSIGNED".equals(spec.toUpperCase())) {
-                        column.setUnsigned(true);
-                    }
-                    if ("DEFAULT".equals(spec.toUpperCase())) {
-                        if (i + 1 < columnSpecStrings.size()) {
-                            column.setDefaultValue(columnSpecStrings.get(i + 1));
-                        }
-                    }
-                    if ("NOT".equals(spec.toUpperCase()) && (i + 1) < columnSpecStrings.size() &&
-                            "NULL".equals(columnSpecStrings.get(i + 1).toUpperCase())) {
-                        column.setNotNull(true);
-                    }
-                    if ("AUTO_INCREMENT".equals(spec.toUpperCase())) {
-                        column.setAutoIncrement(true);
-                    }
-                }
+            column.setName(StringUtil.filterBackQuote(columnDefinition.getName().getSimpleName()));
+            column.setType(columnDefinition.getDataType().toString());
+
+            // set unsigned
+            if (((SQLDataTypeImpl) columnDefinition.getDataType()).isUnsigned()) {
+                column.setUnsigned(true);
+            }
+
+            // set default value
+            if (columnDefinition.getDefaultExpr() != null) {
+                column.setDefaultValue(columnDefinition.getDefaultExpr().toString());
+            }
+
+            if (this.isNotNull(columnDefinition)) {
+                column.setNotNull(true);
+            }
+
+            // set auto increment
+            if (columnDefinition.isAutoIncrement()) {
+                column.setAutoIncrement(true);
             }
             this.appendColumn(column);
         }
     }
 
-    public void setPrimaryKeyName(Statement statement) {
-        CreateTable createTable = (CreateTable) statement;
-        List<Index> indexes = createTable.getIndexes();
-        for (Index index :
-                indexes) {
-            String type = index.getType();
-            if ("PRIMARY KEY".equals(type.replaceAll("\\s+", " ").toUpperCase())) {
-                List<String> columnsNames = index.getColumnsNames();
-                if (columnsNames.size() == 0) {
-                    return;
+
+    private boolean isNotNull(SQLColumnDefinition definition) {
+        if (definition.getConstraints() != null && definition.getConstraints().size() > 0) {
+            for (SQLColumnConstraint constraint :
+                    definition.getConstraints()) {
+                if (constraint instanceof SQLNotNullConstraint) {
+                    return true;
                 }
-                this.setPrimaryKey(columnsNames.get(0));
             }
         }
+        return false;
     }
+
 
     @Override
     public String toString() {

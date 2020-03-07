@@ -34,10 +34,7 @@ public class StringUtil {
 
     public static String filterBackQuote(String string) {
         while (!"".equals(string) && string.startsWith("`") && string.endsWith("`") && string.length() != 1) {
-            string = string.substring(1);
-            if (string.length() != 0) {
-                string = string.substring(0, string.length() - 1);
-            }
+            string = string.substring(1, string.length() - 1);
         }
         return string;
     }
