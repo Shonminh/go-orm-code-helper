@@ -26,3 +26,7 @@ hs_err_pid*
 .idea
 *.iml
 helper/out/production/helper/META-INF/
+
+
+/helper/.gradle/
+/helper/build/
