@@ -24,4 +24,4 @@ ORM code helper for go language, it can generate model struct by creating sql st
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
