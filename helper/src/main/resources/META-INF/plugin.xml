@@ -49,6 +49,7 @@
     ]]>
     </change-notes>
 
+    <idea-version since-build="131"/>
     <depends>com.intellij.modules.lang</depends>
 
     <actions>
