@@ -14,17 +14,14 @@
             <li><a href="https://github.com/jinzhu/gorm">GORM</a> is supported for generate ORM code</li>
         </ul>
         Please <a href="https://plugins.jetbrains.com/plugin/13476-go-orm-code-helper">share your feedback and rating scores here</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://github.com/Shonminh/go-orm-code-helper/issues">Known issues</a>
-        <br/><br/><br/>
-
+        <br/><br/>
         To use:
         <ol>
             <li>right click and select <b>Generate Model</b> or just print <b>⌘ + G</b></li>
-            <br/><br/>
         </ol>
-
         <br/><br/>
         More feature:
-        See <a href="https://github.com/Shonminh/go-orm-code-helper">go-orm-code-helper</a>and star our Github project, you can subscribe more activities.
+        See <a href="https://github.com/Shonminh/go-orm-code-helper">go-orm-code-helper</a> and star our Github project, you can get more activities.
     ]]>
     </description>
     <change-notes>
@@ -52,6 +49,7 @@
     ]]>
     </change-notes>
 
+    <idea-version since-build="131"/>
     <depends>com.intellij.modules.lang</depends>
 
     <actions>
