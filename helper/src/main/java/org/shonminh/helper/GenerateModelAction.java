@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import org.shonminh.helper.sql.SqlParser;
 import org.shonminh.helper.util.FileUtil;
 
@@ -44,8 +45,14 @@ public class GenerateModelAction extends AnAction {
         try {
             FileUtil.WriteFile(canonicalPath, result);
             Messages.showInfoMessage("success, file is " + canonicalPath, "Generate Model Result");
+            freshProjectFiles(canonicalPath);
         } catch (IOException e) {
             Messages.showInfoMessage("failed, exception info is " + e.toString(), "Generate Model Result");
         }
+    }
+
+    // fresh project files to show model file immediately
+    private void freshProjectFiles(String path) {
+        LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
     }
 }
