@@ -18,6 +18,7 @@ public class Model {
     private String modelName;
     private String primaryKey;
     private List<Column> columns;
+    private String structModelName;
 
     public String getPrimaryKey() {
         return primaryKey;
@@ -55,19 +56,21 @@ public class Model {
     }
 
     public String generateGoStruct() {
-        if (this.columns == null || this.columns.size() == 0) {
+        if (this.getColumns() == null || this.getColumns().size() == 0) {
             return "";
         }
+        this.setStructModelName(StringUtil.camelString(this.getModelName()));
+
         // calculate formalize blank string
         calculateFormalizeString();
 
         StringBuilder sb = new StringBuilder();
         sb.append("type ");
-        sb.append(StringUtil.camelString(this.modelName));
+        sb.append(this.getStructModelName());
         sb.append(" struct {\n");
 
-        for (Column column : this.columns) {
-            sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
+        for (Column column : this.getColumns()) {
+            sb.append(column.generateColumnStruc(this.getPrimaryKey().equals(column.getName())));
             sb.append("\n");
         }
         sb.append("}\n");
@@ -176,12 +179,29 @@ public class Model {
     }
 
 
+    private String generateGoCreateFunction() {
+        StringBuilder sb = new StringBuilder();
+        String s = String.format("func (dao *%s) Create%sRecord(db *gorm.db) (err error) {", this.modelName, this.modelName);
+        sb.append(s);
+        sb.append("");
+        return sb.toString();
+    }
+
+    public String getStructModelName() {
+        return structModelName;
+    }
+
+    public void setStructModelName(String structModelName) {
+        this.structModelName = structModelName;
+    }
+
     @Override
     public String toString() {
         return "Model{" +
                 "modelName='" + modelName + '\'' +
                 ", primaryKey='" + primaryKey + '\'' +
                 ", columns=" + columns +
+                ", structModelName='" + structModelName + '\'' +
                 '}';
     }
 }

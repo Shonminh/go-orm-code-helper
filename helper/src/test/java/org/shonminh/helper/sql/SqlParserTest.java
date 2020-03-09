@@ -10,7 +10,7 @@ public class SqlParserTest {
     public void TestExecute() {
         String sql = "CREATE DATABASE IF NOT EXISTS demo_db;\n" +
                 "\n" +
-                "CREATE TABLE IF NOT EXISTS `demo`.`test_tab` (\n" +
+                "CREATE TABLE IF NOT EXISTS `demo_db`.`test_tab` (\n" +
                 "  `id` bigint(21) unsigned NOT NULL AUTO_INCREMENT,\n" +
                 "  user_id int(11) unsigned DEFAULT 0 NOT NULL,\n" +
                 "  parent_user_id varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,\n" +
