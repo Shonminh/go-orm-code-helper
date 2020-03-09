@@ -179,11 +179,16 @@ public class Model {
     }
 
 
-    private String generateGoCreateFunction() {
+    protected String generateGoCreateFunction() {
         StringBuilder sb = new StringBuilder();
-        String s = String.format("func (dao *%s) Create%sRecord(db *gorm.db) (err error) {", this.modelName, this.modelName);
+        String s = String.format("func Create%s(db *gorm.db, dao model.%s, tableName string) (err error) {\n", this.getStructModelName(), this.getStructModelName());
         sb.append(s);
-        sb.append("");
+        sb.append("\tif err = db.Table(tableName).Create(&dao).Error; err != nil {\n");
+        sb.append("\t\treturn err\n");
+        sb.append("\t}\n");
+        sb.append("\treturn nil\n");
+
+        sb.append("}\n");
         return sb.toString();
     }
 

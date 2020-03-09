@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 public class ModelTest {
 
     private Model model = null;
+
     @Before
     public void setUp() throws Exception {
         Model model = new Model("test_tab");
@@ -51,7 +52,14 @@ public class ModelTest {
 
     @Test
     public void TestGenerateGoCreateFunction() {
-        System.out.println(this.getModel());
+        String expect = "func CreateTestTab(db *gorm.db, dao model.TestTab, tableName string) (err error) {\n" +
+                "\tif err = db.Table(tableName).Create(&dao).Error; err != nil {\n" +
+                "\t\treturn err\n" +
+                "\t}\n" +
+                "\treturn nil\n" +
+                "}\n";
+        String actual = model.generateGoCreateFunction();
+        assertEquals(expect, actual);
     }
 
     public void setModel(Model model) {
