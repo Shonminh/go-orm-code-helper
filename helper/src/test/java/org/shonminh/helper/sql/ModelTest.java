@@ -52,13 +52,23 @@ public class ModelTest {
 
     @Test
     public void TestGenerateGoCreateFunction() {
-        String expect = "func CreateTestTab(db *gorm.db, dao model.TestTab, tableName string) (err error) {\n" +
+        String expect = "func CreateTestTab(db *gorm.db, dao TestTab, tableName string) (err error) {\n" +
                 "\tif err = db.Table(tableName).Create(&dao).Error; err != nil {\n" +
                 "\t\treturn err\n" +
                 "\t}\n" +
                 "\treturn nil\n" +
                 "}\n";
         String actual = model.generateGoCreateFunction();
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    public void TestGenerateGoUpdateFunction() {
+        String expect = "func UpdateTestTab(db *gorm.DB, dao TestTab, tableName string, query interface{}, queryArgs []interface{}, updateArgs map[string]interface{}) (affectRows int64, err error) {\n" +
+                "\td := db.Table(tableName).Where(query, queryArgs...).Updates(updateArgs)\n" +
+                "\treturn d.RowsAffected, d.Error\n" +
+                "}\n";
+        String actual = model.generateGoUpdateFunction();
         assertEquals(expect, actual);
     }
 

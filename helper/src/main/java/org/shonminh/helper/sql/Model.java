@@ -181,7 +181,7 @@ public class Model {
 
     protected String generateGoCreateFunction() {
         StringBuilder sb = new StringBuilder();
-        String s = String.format("func Create%s(db *gorm.db, dao model.%s, tableName string) (err error) {\n", this.getStructModelName(), this.getStructModelName());
+        String s = String.format("func Create%s(db *gorm.db, dao %s, tableName string) (err error) {\n", this.getStructModelName(), this.getStructModelName());
         sb.append(s);
         sb.append("\tif err = db.Table(tableName).Create(&dao).Error; err != nil {\n");
         sb.append("\t\treturn err\n");
@@ -191,6 +191,15 @@ public class Model {
         sb.append("}\n");
         return sb.toString();
     }
+
+    protected String generateGoUpdateFunction() {
+
+        return String.format("func Update%s(db *gorm.DB, dao %s, tableName string, query interface{}, queryArgs []interface{}, updateArgs map[string]interface{}) (affectRows int64, err error) {\n" +
+                "\td := db.Table(tableName).Where(query, queryArgs...).Updates(updateArgs)\n" +
+                "\treturn d.RowsAffected, d.Error\n" +
+                "}\n", this.getStructModelName(), this.getStructModelName());
+    }
+
 
     public String getStructModelName() {
         return structModelName;
