@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.shonminh.helper.GenerateModelAction</id>
     <name>Go Orm Code Helper</name>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
 
     <description><![CDATA[
@@ -26,6 +26,11 @@
     </description>
     <change-notes>
         <![CDATA[
+        <b>1.4.0</b>
+        <ul>
+          <li>optimize parse sql statements.</li>
+        </ul>
+
         <b>1.3.0</b>
         <ul>
           <li>Refactor sql parser and solved bugs.</li>
