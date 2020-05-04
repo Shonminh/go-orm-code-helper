@@ -14,6 +14,27 @@ public class Column {
     private String typeFormatStr;
     private boolean isAutoIncrement;
 
+    // go struct name
+    private String structName;
+    // go struct type
+    private String structType;
+
+    public String getStructName() {
+        return structName;
+    }
+
+    public void setStructName(String structName) {
+        this.structName = structName;
+    }
+
+    public String getStructType() {
+        return structType;
+    }
+
+    public void setStructType(String structType) {
+        this.structType = structType;
+    }
+
     public String getName() {
         return name;
     }
@@ -73,13 +94,17 @@ public class Column {
     }
 
     public String generateColumnStruc(boolean isPrimaryKey) {
+
+        this.setStructName(StringUtil.camelString(this.getName()));
+        this.setStructType(GoTypeUtil.Translate2GoType(this.getType(), this.isUnsigned()));
+
         StringBuilder sb = new StringBuilder();
         sb.append("\t");
-        sb.append(StringUtil.camelString(this.name));
-        sb.append(this.formatStr);
-        sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
-        sb.append(this.typeFormatStr);
-        sb.append("`gorm:\"type:").append(this.type.toUpperCase());
+        sb.append(this.getStructName());
+        sb.append(this.getFormatStr());
+        sb.append(this.getStructType());
+        sb.append(this.getTypeFormatStr());
+        sb.append("`gorm:\"type:").append(this.getType().toUpperCase());
         sb.append(";");
         if (isPrimaryKey) {
             sb.append("PRIMARY_KEY;");
@@ -113,6 +138,8 @@ public class Column {
                 ", formatStr='" + formatStr + '\'' +
                 ", typeFormatStr='" + typeFormatStr + '\'' +
                 ", isAutoIncrement=" + isAutoIncrement +
+                ", structName='" + structName + '\'' +
+                ", structType='" + structType + '\'' +
                 '}';
     }
 }
