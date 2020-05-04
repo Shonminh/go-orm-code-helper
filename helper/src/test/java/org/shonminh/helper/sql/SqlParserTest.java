@@ -39,4 +39,39 @@ public class SqlParserTest {
         String actual = sqlParser.Execute(sql);
         assertEquals(expect, actual);
     }
+
+    @Test
+    public void TestIssue16_Can_not_work_with_goland_windows_version() {
+        String sql = "CREATE TABLE group_job (\n" +
+                "g_id int(10) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                "g_type tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:TYPEA; 2:TYPEB',\n" +
+                "g_valid_start timestamp NOT NULL DEFAULT '2001-01-01 00:00:00',\n" +
+                "g_message text NOT NULL COMMENT 'Template, json format',\n" +
+                "g_job_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '0:invalid,1:valid',\n" +
+                "g_a_id varchar(20) NOT NULL DEFAULT '' COMMENT 'account_id',\n" +
+                "g_operator_id int(10) unsigned NOT NULL DEFAULT '0',\n" +
+                "g_version tinyint(255) unsigned NOT NULL DEFAULT '1',\n" +
+                "g_created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                "g_updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n" +
+                "PRIMARY KEY (g_id) USING BTREE,\n" +
+                "KEY g_type (g_type) USING BTREE\n" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        SqlParser sqlParser = new SqlParser();
+        String actual = sqlParser.Execute(sql);
+        String expect = "package model\n" +
+                "\n" +
+                "type GroupJob struct {\n" +
+                "\tGId         uint32    `gorm:\"type:INT(10) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
+                "\tGType       int8      `gorm:\"type:TINYINT(4);NOT NULL\"`\n" +
+                "\tGValidStart time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
+                "\tGMessage    string    `gorm:\"type:TEXT;NOT NULL\"`\n" +
+                "\tGJobStatus  int8      `gorm:\"type:TINYINT(4);NOT NULL\"`\n" +
+                "\tGAId        string    `gorm:\"type:VARCHAR(20);NOT NULL\"`\n" +
+                "\tGOperatorId uint32    `gorm:\"type:INT(10) UNSIGNED;NOT NULL\"`\n" +
+                "\tGVersion    uint8     `gorm:\"type:TINYINT(255) UNSIGNED;NOT NULL\"`\n" +
+                "\tGCreatedAt  time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
+                "\tGUpdatedAt  time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
+                "}\n";
+        assertEquals(expect, actual);
+    }
 }

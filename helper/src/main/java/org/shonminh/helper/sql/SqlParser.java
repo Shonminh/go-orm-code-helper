@@ -2,7 +2,9 @@ package org.shonminh.helper.sql;
 
 
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.util.JdbcConstants;
@@ -70,7 +72,14 @@ public class SqlParser {
 
 
     private String getModelName(MySqlCreateTableStatement createTable) {
-        return StringUtil.filterBackQuote(((SQLPropertyExpr) createTable.getTableSource().getExpr()).getSimpleName());
+        SQLExpr sqlExpr = createTable.getTableSource().getExpr();
+        String simpleName = "";
+        if (sqlExpr instanceof SQLPropertyExpr) {
+            simpleName = ((SQLPropertyExpr) sqlExpr).getSimpleName();
+        } else if (sqlExpr instanceof SQLIdentifierExpr) {
+            simpleName = ((SQLIdentifierExpr) sqlExpr).getSimpleName();
+        }
+        return StringUtil.filterBackQuote(simpleName);
     }
 
     public void setStatements(List<MySqlCreateTableStatement> statements) {
