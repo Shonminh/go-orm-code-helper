@@ -60,6 +60,10 @@ public class SqlParserTest {
         String actual = sqlParser.Execute(sql);
         String expect = "package model\n" +
                 "\n" +
+                "import (\n" +
+                "\t\"time\"\n" +
+                ")\n" +
+                "\n" +
                 "type GroupJob struct {\n" +
                 "\tGId         uint32    `gorm:\"type:INT(10) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
                 "\tGType       int8      `gorm:\"type:TINYINT(4);NOT NULL\"`\n" +

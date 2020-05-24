@@ -13,7 +13,7 @@ public class HeaderUtil {
     public static String getHeaderCodes(List<String> dependencyPackageList) {
         StringBuilder sb = new StringBuilder();
         sb.append("package model\n\n");
-        if (dependencyPackageList == null) {
+        if (dependencyPackageList == null || dependencyPackageList.size() == 0) {
             return sb.toString();
         }
         sb.append("import (\n");

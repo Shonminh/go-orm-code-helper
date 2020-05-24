@@ -8,6 +8,7 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.util.JdbcConstants;
+import org.shonminh.helper.util.HeaderUtil;
 import org.shonminh.helper.util.StringUtil;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class SqlParser {
 
     private String parseStatements() {
         StringBuilder resultStringBuilder = new StringBuilder();
-        boolean isFirst = true;
+        Header h = new Header();
         for (MySqlCreateTableStatement createTable : statements) {
             try {
                 String modelName = getModelName(createTable);
@@ -56,18 +57,16 @@ public class SqlParser {
                 // set all column properties
                 model.setAllColumnProperties(createTable);
                 this.setFileName(model.getModelName().replaceFirst("_tab$", "") + ".go");
-
-                // if is first append string then add golang package name
-                if (isFirst) {
-                    resultStringBuilder.append("package model\n\n");
-                    isFirst = false;
-                }
+                List<String> packageList = model.getHeader().getDependencyPackageList();
+                h.appendDependencyPackageList(packageList);
                 resultStringBuilder.append(model.generateGoStruct());
             } catch (Exception e) {
                 this.setErrMsg(e.getCause().getMessage());
             }
         }
-        return resultStringBuilder.toString();
+        List<String> totalPackageList = h.getDependencyPackageList();
+        String headerCodes = HeaderUtil.getHeaderCodes(totalPackageList);
+        return headerCodes + resultStringBuilder.toString();
     }
 
 
