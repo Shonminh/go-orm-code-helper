@@ -8,6 +8,7 @@ import com.alibaba.druid.sql.ast.statement.SQLTableElement;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import org.shonminh.helper.util.GoTypeUtil;
+import org.shonminh.helper.util.HeaderUtil;
 import org.shonminh.helper.util.StringUtil;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Model {
     private String modelName;
     private String primaryKey;
     private List<Column> columns;
+    private Header header;
 
     public String getPrimaryKey() {
         return primaryKey;
@@ -29,6 +31,7 @@ public class Model {
 
     public Model(String modelName) {
         this.modelName = modelName;
+        this.header = new Header();
     }
 
     public String getModelName() {
@@ -45,6 +48,14 @@ public class Model {
 
     public void setColumns(List<Column> columns) {
         this.columns = columns;
+    }
+
+    public Header getHeader() {
+        return header;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
     public void appendColumn(Column column) {
@@ -158,6 +169,15 @@ public class Model {
             if (columnDefinition.isAutoIncrement()) {
                 column.setAutoIncrement(true);
             }
+
+            // set model header
+            String dependencyPackageName = HeaderUtil.getDependencyPackageName(column.getType());
+            if (dependencyPackageName != null) {
+                Header h = this.getHeader();
+                h.appendDependencyPackage(dependencyPackageName);
+                this.setHeader(h);
+            }
+
             this.appendColumn(column);
         }
     }
@@ -182,6 +202,7 @@ public class Model {
                 "modelName='" + modelName + '\'' +
                 ", primaryKey='" + primaryKey + '\'' +
                 ", columns=" + columns +
+                ", header=" + header +
                 '}';
     }
 }
