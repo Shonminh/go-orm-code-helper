@@ -27,14 +27,14 @@ public class SqlParserTest {
         String expect = "package model\n" +
                 "\n" +
                 "type TestTab struct {\n" +
-                "\tId           uint64  `gorm:\"type:BIGINT(21) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
-                "\tUserId       uint32  `gorm:\"type:INT(11) UNSIGNED;NOT NULL\"`\n" +
-                "\tParentUserId string  `gorm:\"type:VARCHAR(64);NOT NULL\"`\n" +
-                "\tNoId         int64   `gorm:\"type:BIGINT(21);NOT NULL\"`\n" +
-                "\tTinyName     string  `gorm:\"type:VARCHAR(64);NOT NULL\"`\n" +
-                "\tScore        float64 `gorm:\"type:DECIMAL(10, 3);NOT NULL\"`\n" +
-                "\tCreateTime   uint32  `gorm:\"type:INT(11) UNSIGNED;NOT NULL\"`\n" +
-                "\tUpdateTime   uint32  `gorm:\"type:INT(11) UNSIGNED;NOT NULL\"`\n" +
+                "\tId           uint64  `gorm:\"column:id;type:BIGINT(21) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
+                "\tUserId       uint32  `gorm:\"column:user_id;type:INT(11) UNSIGNED;NOT NULL\"`\n" +
+                "\tParentUserId string  `gorm:\"column:parent_user_id;type:VARCHAR(64);NOT NULL\"`\n" +
+                "\tNoId         int64   `gorm:\"column:no_id;type:BIGINT(21);NOT NULL\"`\n" +
+                "\tTinyName     string  `gorm:\"column:tiny_name;type:VARCHAR(64);NOT NULL\"`\n" +
+                "\tScore        float64 `gorm:\"column:score;type:DECIMAL(10, 3);NOT NULL\"`\n" +
+                "\tCreateTime   uint32  `gorm:\"column:create_time;type:INT(11) UNSIGNED;NOT NULL\"`\n" +
+                "\tUpdateTime   uint32  `gorm:\"column:update_time;type:INT(11) UNSIGNED;NOT NULL\"`\n" +
                 "}\n";
         String actual = sqlParser.Execute(sql);
         assertEquals(expect, actual);
@@ -65,16 +65,16 @@ public class SqlParserTest {
                 ")\n" +
                 "\n" +
                 "type GroupJob struct {\n" +
-                "\tGId         uint32    `gorm:\"type:INT(10) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
-                "\tGType       int8      `gorm:\"type:TINYINT(4);NOT NULL\"`\n" +
-                "\tGValidStart time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
-                "\tGMessage    string    `gorm:\"type:TEXT;NOT NULL\"`\n" +
-                "\tGJobStatus  int8      `gorm:\"type:TINYINT(4);NOT NULL\"`\n" +
-                "\tGAId        string    `gorm:\"type:VARCHAR(20);NOT NULL\"`\n" +
-                "\tGOperatorId uint32    `gorm:\"type:INT(10) UNSIGNED;NOT NULL\"`\n" +
-                "\tGVersion    uint8     `gorm:\"type:TINYINT(255) UNSIGNED;NOT NULL\"`\n" +
-                "\tGCreatedAt  time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
-                "\tGUpdatedAt  time.Time `gorm:\"type:TIMESTAMP;NOT NULL\"`\n" +
+                "\tGId         uint32    `gorm:\"column:g_id;type:INT(10) UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL\"`\n" +
+                "\tGType       int8      `gorm:\"column:g_type;type:TINYINT(4);NOT NULL\"`\n" +
+                "\tGValidStart time.Time `gorm:\"column:g_valid_start;type:TIMESTAMP;NOT NULL\"`\n" +
+                "\tGMessage    string    `gorm:\"column:g_message;type:TEXT;NOT NULL\"`\n" +
+                "\tGJobStatus  int8      `gorm:\"column:g_job_status;type:TINYINT(4);NOT NULL\"`\n" +
+                "\tGAId        string    `gorm:\"column:g_a_id;type:VARCHAR(20);NOT NULL\"`\n" +
+                "\tGOperatorId uint32    `gorm:\"column:g_operator_id;type:INT(10) UNSIGNED;NOT NULL\"`\n" +
+                "\tGVersion    uint8     `gorm:\"column:g_version;type:TINYINT(255) UNSIGNED;NOT NULL\"`\n" +
+                "\tGCreatedAt  time.Time `gorm:\"column:g_created_at;type:TIMESTAMP;NOT NULL\"`\n" +
+                "\tGUpdatedAt  time.Time `gorm:\"column:g_updated_at;type:TIMESTAMP;NOT NULL\"`\n" +
                 "}\n";
         assertEquals(expect, actual);
     }
