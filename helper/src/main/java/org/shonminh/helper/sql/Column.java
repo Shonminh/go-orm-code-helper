@@ -7,6 +7,7 @@ public class Column {
 
     private String name;
     private String type;
+    private String column;
     private String defaultValue;
     private boolean isUnsigned;
     private boolean isNotNull;
@@ -26,8 +27,14 @@ public class Column {
         return type;
     }
 
+    public String getColumn() { return column; }
+
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     public String getDefaultValue() {
@@ -79,7 +86,10 @@ public class Column {
         sb.append(this.formatStr);
         sb.append(GoTypeUtil.Translate2GoType(this.type, this.isUnsigned));
         sb.append(this.typeFormatStr);
-        sb.append("`gorm:\"type:").append(this.type.toUpperCase());
+        sb.append("`gorm:");
+        sb.append("\"column:").append(this.getColumn().replaceAll("`", "").trim());
+        sb.append(";");
+        sb.append("type:").append(this.type.toUpperCase());
         sb.append(";");
         if (isPrimaryKey) {
             sb.append("PRIMARY_KEY;");

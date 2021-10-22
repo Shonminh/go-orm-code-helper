@@ -150,6 +150,7 @@ public class Model {
             Column column = new Column();
             column.setName(StringUtil.filterBackQuote(columnDefinition.getName().getSimpleName()));
             column.setType(columnDefinition.getDataType().toString());
+            column.setColumn(columnDefinition.getColumnName());
 
             // set unsigned
             if (((SQLDataTypeImpl) columnDefinition.getDataType()).isUnsigned()) {
