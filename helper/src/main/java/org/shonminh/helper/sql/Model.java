@@ -1,10 +1,7 @@
 package org.shonminh.helper.sql;
 
 import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
-import com.alibaba.druid.sql.ast.statement.SQLColumnConstraint;
-import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
-import com.alibaba.druid.sql.ast.statement.SQLNotNullConstraint;
-import com.alibaba.druid.sql.ast.statement.SQLTableElement;
+import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import org.shonminh.helper.util.GoTypeUtil;
@@ -151,6 +148,18 @@ public class Model {
             column.setName(StringUtil.filterBackQuote(columnDefinition.getName().getSimpleName()));
             column.setType(columnDefinition.getDataType().toString());
             column.setColumn(columnDefinition.getColumnName());
+
+
+            // if primary key is defined in the current column
+            List<SQLColumnConstraint> constraints = columnDefinition.getConstraints();
+            if (constraints != null && constraints.size() > 0) {
+                for (SQLColumnConstraint constraint : constraints) {
+                    if (constraint instanceof SQLColumnPrimaryKey && this.primaryKey == null) {
+                        this.setPrimaryKey(column.getName());
+                        break;
+                    }
+                }
+            }
 
             // set unsigned
             if (((SQLDataTypeImpl) columnDefinition.getDataType()).isUnsigned()) {

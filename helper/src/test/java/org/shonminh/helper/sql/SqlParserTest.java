@@ -41,7 +41,8 @@ public class SqlParserTest {
     }
 
     @Test
-    public void TestIssue16_Can_not_work_with_goland_windows_version() {
+    // https://github.com/Shonminh/go-orm-code-helper/issues/16
+    public void TestIssue16_can_not_work_with_goland_windows_version() {
         String sql = "CREATE TABLE group_job (\n" +
                 "g_id int(10) unsigned NOT NULL AUTO_INCREMENT,\n" +
                 "g_type tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:TYPEA; 2:TYPEB',\n" +
@@ -75,6 +76,39 @@ public class SqlParserTest {
                 "\tGVersion    uint8     `gorm:\"column:g_version;type:TINYINT(255) UNSIGNED;NOT NULL\"`\n" +
                 "\tGCreatedAt  time.Time `gorm:\"column:g_created_at;type:TIMESTAMP;NOT NULL\"`\n" +
                 "\tGUpdatedAt  time.Time `gorm:\"column:g_updated_at;type:TIMESTAMP;NOT NULL\"`\n" +
+                "}\n";
+        assertEquals(expect, actual);
+    }
+
+    @Test
+    // // https://github.com/Shonminh/go-orm-code-helper/issues/24
+    public void TestIssue24_support_primary_key_format() {
+        String sql = "CREATE TABLE `user`\n" +
+                "(\n" +
+                "    `id`                     int unsigned primary key auto_increment,\n" +
+                "    `name`                   varchar(24) not null unique,\n" +
+                "    `password`               char(60)    not null,\n" +
+                "    `randomSalt`             char(24)    not null,\n" +
+                "    `create_time`            timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                "    `update_time`            timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n" +
+                "    `api_permission_bitmask` int unsigned not null\n" +
+                ");";
+        SqlParser sqlParser = new SqlParser();
+        String actual = sqlParser.Execute(sql);
+        String expect = "package model\n" +
+                "\n" +
+                "import (\n" +
+                "\t\"time\"\n" +
+                ")\n" +
+                "\n" +
+                "type User struct {\n" +
+                "\tId                   uint32    `gorm:\"column:id;type:INT UNSIGNED;PRIMARY_KEY;AUTO_INCREMENT;\"`\n" +
+                "\tName                 string    `gorm:\"column:name;type:VARCHAR(24);NOT NULL\"`\n" +
+                "\tPassword             string    `gorm:\"column:password;type:CHAR(60);NOT NULL\"`\n" +
+                "\tRandomSalt           string    `gorm:\"column:randomSalt;type:CHAR(24);NOT NULL\"`\n" +
+                "\tCreateTime           time.Time `gorm:\"column:create_time;type:TIMESTAMP;\"`\n" +
+                "\tUpdateTime           time.Time `gorm:\"column:update_time;type:TIMESTAMP;\"`\n" +
+                "\tApiPermissionBitmask uint32    `gorm:\"column:api_permission_bitmask;type:INT UNSIGNED;NOT NULL\"`\n" +
                 "}\n";
         assertEquals(expect, actual);
     }
