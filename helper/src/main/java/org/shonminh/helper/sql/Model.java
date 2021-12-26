@@ -17,6 +17,7 @@ public class Model {
     private String primaryKey;
     private List<Column> columns;
     private Header header;
+    private String structModelName;
 
     public String getPrimaryKey() {
         return primaryKey;
@@ -63,19 +64,21 @@ public class Model {
     }
 
     public String generateGoStruct() {
-        if (this.columns == null || this.columns.size() == 0) {
+        if (this.getColumns() == null || this.getColumns().size() == 0) {
             return "";
         }
+        this.setStructModelName(StringUtil.camelString(this.getModelName()));
+
         // calculate formalize blank string
         calculateFormalizeString();
 
         StringBuilder sb = new StringBuilder();
         sb.append("type ");
-        sb.append(StringUtil.camelString(this.modelName));
+        sb.append(this.getStructModelName());
         sb.append(" struct {\n");
 
-        for (Column column : this.columns) {
-            sb.append(column.generateColumnStruc(this.primaryKey.equals(column.getName())));
+        for (Column column : this.getColumns()) {
+            sb.append(column.generateColumnStruc(this.getPrimaryKey().equals(column.getName())));
             sb.append("\n");
         }
         sb.append("}\n");
@@ -206,6 +209,36 @@ public class Model {
     }
 
 
+    protected String generateGoCreateFunction() {
+        StringBuilder sb = new StringBuilder();
+        String s = String.format("func Create%s(db *gorm.db, dao %s, tableName string) (err error) {\n", this.getStructModelName(), this.getStructModelName());
+        sb.append(s);
+        sb.append("\tif err = db.Table(tableName).Create(&dao).Error; err != nil {\n");
+        sb.append("\t\treturn err\n");
+        sb.append("\t}\n");
+        sb.append("\treturn nil\n");
+
+        sb.append("}\n");
+        return sb.toString();
+    }
+
+    protected String generateGoUpdateFunction() {
+
+        return String.format("func Update%s(db *gorm.DB, dao %s, tableName string, query interface{}, queryArgs []interface{}, updateArgs map[string]interface{}) (affectRows int64, err error) {\n" +
+                "\td := db.Table(tableName).Where(query, queryArgs...).Updates(updateArgs)\n" +
+                "\treturn d.RowsAffected, d.Error\n" +
+                "}\n", this.getStructModelName(), this.getStructModelName());
+    }
+
+
+    public String getStructModelName() {
+        return structModelName;
+    }
+
+    public void setStructModelName(String structModelName) {
+        this.structModelName = structModelName;
+    }
+
     @Override
     public String toString() {
         return "Model{" +
@@ -213,6 +246,7 @@ public class Model {
                 ", primaryKey='" + primaryKey + '\'' +
                 ", columns=" + columns +
                 ", header=" + header +
+                ", structModelName='" + structModelName + '\'' +
                 '}';
     }
 }

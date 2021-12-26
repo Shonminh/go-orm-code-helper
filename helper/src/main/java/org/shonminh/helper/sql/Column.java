@@ -15,6 +15,27 @@ public class Column {
     private String typeFormatStr;
     private boolean isAutoIncrement;
 
+    // go struct name
+    private String structName;
+    // go struct type
+    private String structType;
+
+    public String getStructName() {
+        return structName;
+    }
+
+    public void setStructName(String structName) {
+        this.structName = structName;
+    }
+
+    public String getStructType() {
+        return structType;
+    }
+
+    public void setStructType(String structType) {
+        this.structType = structType;
+    }
+
     public String getName() {
         return name;
     }
@@ -80,6 +101,10 @@ public class Column {
     }
 
     public String generateColumnStruc(boolean isPrimaryKey) {
+
+        this.setStructName(StringUtil.camelString(this.getName()));
+        this.setStructType(GoTypeUtil.Translate2GoType(this.getType(), this.isUnsigned()));
+
         StringBuilder sb = new StringBuilder();
         sb.append("\t");
         sb.append(StringUtil.camelString(this.name));
@@ -123,6 +148,8 @@ public class Column {
                 ", formatStr='" + formatStr + '\'' +
                 ", typeFormatStr='" + typeFormatStr + '\'' +
                 ", isAutoIncrement=" + isAutoIncrement +
+                ", structName='" + structName + '\'' +
+                ", structType='" + structType + '\'' +
                 '}';
     }
 }

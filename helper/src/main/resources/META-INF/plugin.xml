@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.shonminh.helper.GenerateModelAction</id>
     <name>Go Orm Code Helper</name>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
     <vendor email="shonminh@gmail.com" url="https://github.com/Shonminh">Shonminh Yang</vendor>
 
     <description><![CDATA[
@@ -26,6 +26,11 @@
     </description>
     <change-notes>
         <![CDATA[
+        <b>1.4.3</b>
+        <ul>
+          <li>fix parse primary key bug and add column tag</li>
+        </ul>
+
         <b>1.4.2</b>
         <ul>
           <li>optimize parse sql statements.</li>
